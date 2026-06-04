@@ -1,0 +1,312 @@
+[
+  {
+    "scenario_id": 0,
+    "anomaly_rate_target": 0.05,
+    "anomaly_rate_actual": 0.0542,
+    "train_shape": [
+      10000,
+      8
+    ],
+    "test_shape": [
+      10000,
+      8
+    ],
+    "n_anomaly_points": 542,
+    "params": [
+      "battery_voltage",
+      "solar_current",
+      "temperature_int",
+      "temperature_ext",
+      "thruster_pressure",
+      "attitude_error",
+      "data_rate",
+      "cpu_load"
+    ],
+    "anomalies": [
+      {
+        "type": "drift",
+        "start": 4101,
+        "end": 4279,
+        "length": 179,
+        "affected_params": [
+          "battery_voltage",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 3524,
+        "end": 3579,
+        "length": 56,
+        "affected_params": [
+          "battery_voltage",
+          "solar_current"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 957,
+        "end": 971,
+        "length": 15,
+        "affected_params": [
+          "battery_voltage"
+        ]
+      },
+      {
+        "type": "drift",
+        "start": 5496,
+        "end": 5683,
+        "length": 188,
+        "affected_params": [
+          "solar_current",
+          "data_rate"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 8419,
+        "end": 8512,
+        "length": 94,
+        "affected_params": [
+          "data_rate",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 3010,
+        "end": 3019,
+        "length": 10,
+        "affected_params": [
+          "attitude_error"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 1,
+    "anomaly_rate_target": 0.1,
+    "anomaly_rate_actual": 0.0921,
+    "train_shape": [
+      10000,
+      8
+    ],
+    "test_shape": [
+      8000,
+      8
+    ],
+    "n_anomaly_points": 737,
+    "params": [
+      "battery_voltage",
+      "solar_current",
+      "temperature_int",
+      "temperature_ext",
+      "thruster_pressure",
+      "attitude_error",
+      "data_rate",
+      "cpu_load"
+    ],
+    "anomalies": [
+      {
+        "type": "drift",
+        "start": 3812,
+        "end": 4094,
+        "length": 283,
+        "affected_params": [
+          "battery_voltage",
+          "solar_current"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 5190,
+        "end": 5286,
+        "length": 97,
+        "affected_params": [
+          "data_rate",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 2438,
+        "end": 2458,
+        "length": 21,
+        "affected_params": [
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "drift",
+        "start": 754,
+        "end": 991,
+        "length": 238,
+        "affected_params": [
+          "solar_current",
+          "data_rate"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 3661,
+        "end": 3745,
+        "length": 85,
+        "affected_params": [
+          "thruster_pressure",
+          "attitude_error"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 7627,
+        "end": 7639,
+        "length": 13,
+        "affected_params": [
+          "cpu_load"
+        ]
+      }
+    ]
+  },
+  {
+    "scenario_id": 2,
+    "anomaly_rate_target": 0.15,
+    "anomaly_rate_actual": 0.1306,
+    "train_shape": [
+      10000,
+      8
+    ],
+    "test_shape": [
+      8000,
+      8
+    ],
+    "n_anomaly_points": 1045,
+    "params": [
+      "battery_voltage",
+      "solar_current",
+      "temperature_int",
+      "temperature_ext",
+      "thruster_pressure",
+      "attitude_error",
+      "data_rate",
+      "cpu_load"
+    ],
+    "anomalies": [
+      {
+        "type": "drift",
+        "start": 451,
+        "end": 615,
+        "length": 165,
+        "affected_params": [
+          "battery_voltage",
+          "solar_current"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 4537,
+        "end": 4613,
+        "length": 77,
+        "affected_params": [
+          "data_rate",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 6194,
+        "end": 6214,
+        "length": 21,
+        "affected_params": [
+          "attitude_error"
+        ]
+      },
+      {
+        "type": "drift",
+        "start": 1926,
+        "end": 2120,
+        "length": 195,
+        "affected_params": [
+          "solar_current",
+          "data_rate"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 4102,
+        "end": 4171,
+        "length": 70,
+        "affected_params": [
+          "temperature_int",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 4943,
+        "end": 4961,
+        "length": 19,
+        "affected_params": [
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "drift",
+        "start": 2358,
+        "end": 2528,
+        "length": 171,
+        "affected_params": [
+          "battery_voltage",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "drift",
+        "start": 123,
+        "end": 293,
+        "length": 171,
+        "affected_params": [
+          "temperature_int",
+          "temperature_ext"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 4844,
+        "end": 4910,
+        "length": 67,
+        "affected_params": [
+          "temperature_int",
+          "cpu_load"
+        ]
+      },
+      {
+        "type": "step",
+        "start": 2728,
+        "end": 2784,
+        "length": 57,
+        "affected_params": [
+          "battery_voltage",
+          "solar_current"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 305,
+        "end": 322,
+        "length": 18,
+        "affected_params": [
+          "attitude_error"
+        ]
+      },
+      {
+        "type": "spike",
+        "start": 6674,
+        "end": 6687,
+        "length": 14,
+        "affected_params": [
+          "battery_voltage"
+        ]
+      }
+    ]
+  }
+]

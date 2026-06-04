@@ -1,0 +1,178 @@
+{
+  "P-1": {
+    "LOF": {
+      "mean_ttd": 43.333333333333336,
+      "median_ttd": 56.0,
+      "detection_rate": 1.0,
+      "n_intervals": 3,
+      "n_detected": 3,
+      "top_contributing_dim": 12
+    },
+    "OCSVM": {
+      "mean_ttd": 42.0,
+      "median_ttd": 55.0,
+      "detection_rate": 1.0,
+      "n_intervals": 3,
+      "n_detected": 3,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.6962,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "S-1": {
+    "LOF": {
+      "mean_ttd": 45.0,
+      "median_ttd": 45.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "OCSVM": {
+      "mean_ttd": 45.0,
+      "median_ttd": 45.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.9384,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "E-1": {
+    "LOF": {
+      "mean_ttd": 30.0,
+      "median_ttd": 30.0,
+      "detection_rate": 0.5,
+      "n_intervals": 2,
+      "n_detected": 1,
+      "top_contributing_dim": 5
+    },
+    "OCSVM": {
+      "mean_ttd": 24.0,
+      "median_ttd": 24.0,
+      "detection_rate": 0.5,
+      "n_intervals": 2,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.8063,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "E-2": {
+    "LOF": {
+      "mean_ttd": 0.0,
+      "median_ttd": 0.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "OCSVM": {
+      "mean_ttd": 35.0,
+      "median_ttd": 35.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 5
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.3398,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "F-1": {
+    "LOF": {
+      "mean_ttd": 30.0,
+      "median_ttd": 30.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "OCSVM": {
+      "mean_ttd": 30.0,
+      "median_ttd": 30.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.7065,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "G-1": {
+    "LOF": {
+      "mean_ttd": 101.0,
+      "median_ttd": 101.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 5
+    },
+    "OCSVM": {
+      "mean_ttd": 91.0,
+      "median_ttd": 91.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.2721,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "D-1": {
+    "LOF": {
+      "mean_ttd": 93.0,
+      "median_ttd": 93.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "OCSVM": {
+      "mean_ttd": 89.0,
+      "median_ttd": 89.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.9507,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  },
+  "M-5": {
+    "LOF": {
+      "mean_ttd": 13.0,
+      "median_ttd": 13.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 47
+    },
+    "OCSVM": {
+      "mean_ttd": 22.0,
+      "median_ttd": 22.0,
+      "detection_rate": 1.0,
+      "n_intervals": 1,
+      "n_detected": 1,
+      "top_contributing_dim": 0
+    },
+    "LSTM-LOF+IF": {
+      "f1": 0.9024,
+      "note": "TTD not computed, F1 from saved metrics"
+    }
+  }
+}

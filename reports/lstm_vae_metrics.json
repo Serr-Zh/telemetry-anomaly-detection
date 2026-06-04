@@ -1,0 +1,73 @@
+{
+  "method": "LSTM-Forecast + VAE (z-only decoder) + IF",
+  "micro_f1": 0.6255,
+  "macro_f1": 0.4354,
+  "micro_p": 0.5742,
+  "micro_r": 0.6868,
+  "per_channel": {
+    "P-1": {
+      "f1": 0.1971,
+      "best_method": "IF",
+      "best_score": "fcast_d2",
+      "Deep_f1": 0.1783,
+      "IF_f1": 0.1971,
+      "Ensemble_f1": 0.1765
+    },
+    "S-1": {
+      "f1": 0.7122,
+      "best_method": "Ensemble",
+      "best_score": "fcast_d0",
+      "Deep_f1": 0.7014,
+      "IF_f1": 0.6599,
+      "Ensemble_f1": 0.7122
+    },
+    "E-1": {
+      "f1": 0.575,
+      "best_method": "IF",
+      "best_score": "mahal",
+      "Deep_f1": 0.2877,
+      "IF_f1": 0.575,
+      "Ensemble_f1": 0.329
+    },
+    "E-2": {
+      "f1": 0.4971,
+      "best_method": "Deep",
+      "best_score": "fcast_d0",
+      "Deep_f1": 0.4971,
+      "IF_f1": 0.2392,
+      "Ensemble_f1": 0.4509
+    },
+    "F-1": {
+      "f1": 0.136,
+      "best_method": "Deep",
+      "best_score": "fcast_d7",
+      "Deep_f1": 0.136,
+      "IF_f1": 0,
+      "Ensemble_f1": 0.1215
+    },
+    "G-1": {
+      "f1": 0.0556,
+      "best_method": "Deep",
+      "best_score": "combo",
+      "Deep_f1": 0.0556,
+      "IF_f1": 0.0323,
+      "Ensemble_f1": 0.0474
+    },
+    "D-1": {
+      "f1": 0.9479,
+      "best_method": "Deep",
+      "best_score": "vae_recon",
+      "Deep_f1": 0.9479,
+      "IF_f1": 0.7612,
+      "Ensemble_f1": 0.9357
+    },
+    "M-5": {
+      "f1": 0.3624,
+      "best_method": "Ensemble",
+      "best_score": "fcast_max",
+      "Deep_f1": 0.3606,
+      "IF_f1": 0.0127,
+      "Ensemble_f1": 0.3624
+    }
+  }
+}

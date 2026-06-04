@@ -1,0 +1,73 @@
+{
+  "method": "LSTM-Forecast + LOF + IF Ensemble",
+  "micro_f1": 0.6639,
+  "macro_f1": 0.7015,
+  "micro_p": 0.5434,
+  "micro_r": 0.8529,
+  "per_channel": {
+    "P-1": {
+      "f1": 0.6962,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0.2394,
+      "LOF_raw_f1": 0.6962,
+      "IF_f1": 0.1971,
+      "Ensemble_f1": 0.5182
+    },
+    "S-1": {
+      "f1": 0.9384,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0,
+      "LOF_raw_f1": 0.9384,
+      "IF_f1": 0.6599,
+      "Ensemble_f1": 0.8621
+    },
+    "E-1": {
+      "f1": 0.8063,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0.1603,
+      "LOF_raw_f1": 0.8063,
+      "IF_f1": 0.575,
+      "Ensemble_f1": 0.3608
+    },
+    "E-2": {
+      "f1": 0.3398,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0.1865,
+      "LOF_raw_f1": 0.3398,
+      "IF_f1": 0.2392,
+      "Ensemble_f1": 0.332
+    },
+    "F-1": {
+      "f1": 0.7065,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0,
+      "LOF_raw_f1": 0.7065,
+      "IF_f1": 0,
+      "Ensemble_f1": 0.4781
+    },
+    "G-1": {
+      "f1": 0.2721,
+      "best_method": "LOF_raw",
+      "LOF_err_f1": 0.1438,
+      "LOF_raw_f1": 0.2721,
+      "IF_f1": 0.0323,
+      "Ensemble_f1": 0.0911
+    },
+    "D-1": {
+      "f1": 0.9507,
+      "best_method": "LOF_err",
+      "LOF_err_f1": 0.9507,
+      "LOF_raw_f1": 0.9448,
+      "IF_f1": 0.7612,
+      "Ensemble_f1": 0.9322
+    },
+    "M-5": {
+      "f1": 0.9024,
+      "best_method": "Ensemble",
+      "LOF_err_f1": 0.8378,
+      "LOF_raw_f1": 0.8183,
+      "IF_f1": 0.0127,
+      "Ensemble_f1": 0.9024
+    }
+  }
+}

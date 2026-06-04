@@ -1,0 +1,130 @@
+{
+  "summary": {
+    "IF": {
+      "pw_macro_f1": 0.3551,
+      "pa_macro_f1": 0.8226,
+      "mean_time_per_channel_s": 0.52,
+      "total_time_s": 4.1
+    },
+    "LOF": {
+      "pw_macro_f1": 0.6575,
+      "pa_macro_f1": 0.8655,
+      "mean_time_per_channel_s": 1.81,
+      "total_time_s": 14.5
+    },
+    "OCSVM": {
+      "pw_macro_f1": 0.6496,
+      "pa_macro_f1": 0.8558,
+      "mean_time_per_channel_s": 7.89,
+      "total_time_s": 63.1
+    },
+    "LSTM-VAE": {
+      "pw_macro_f1": 0.503,
+      "pa_macro_f1": 0.7342,
+      "mean_time_per_channel_s": 56.3,
+      "total_time_s": 450.4
+    },
+    "LSTM-LOF": {
+      "pw_macro_f1": 0.7149,
+      "pa_macro_f1": 0.9279,
+      "mean_time_per_channel_s": 59.87,
+      "total_time_s": 478.96
+    },
+    "Prophet": {
+      "pw_macro_f1": 0.2581,
+      "pa_macro_f1": 0.3959,
+      "mean_time_per_channel_s": 1.4,
+      "total_time_s": 11.2
+    },
+    "SARIMA": {
+      "pw_macro_f1": 0.146,
+      "pa_macro_f1": 0.146,
+      "mean_time_per_channel_s": 0.1,
+      "total_time_s": 0.8
+    },
+    "Ensemble-majority": {
+      "pw_macro_f1": 0.4443,
+      "pa_macro_f1": 0.8163,
+      "mean_time_per_channel_s": 126.49
+    },
+    "Ensemble-any": {
+      "pw_macro_f1": 0.7145,
+      "pa_macro_f1": 0.9589,
+      "mean_time_per_channel_s": 126.49
+    }
+  },
+  "per_channel": {
+    "P-1": {
+      "IF": {"pw_f1": 0.2476, "pa_f1": 0.8067, "time": 0.5},
+      "LOF": {"pw_f1": 0.694, "pa_f1": 0.924, "time": 3.7},
+      "OCSVM": {"pw_f1": 0.678, "pa_f1": 0.899, "time": 7.1},
+      "LSTM-VAE": {"pw_f1": 0.164, "pa_f1": 0.164, "time": 50.5},
+      "LSTM-LOF": {"pw_f1": 0.6962, "pa_f1": 0.8794, "time": 64.7},
+      "Prophet": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 1.4},
+      "SARIMA": {"pw_f1": 0.17, "pa_f1": 0.17, "time": 0.1}
+    },
+    "S-1": {
+      "IF": {"pw_f1": 0.568, "pa_f1": 0.917, "time": 0.5},
+      "LOF": {"pw_f1": 0.928, "pa_f1": 1.0, "time": 1.5},
+      "OCSVM": {"pw_f1": 0.928, "pa_f1": 1.0, "time": 6.1},
+      "LSTM-VAE": {"pw_f1": 0.735, "pa_f1": 0.978, "time": 48.1},
+      "LSTM-LOF": {"pw_f1": 0.9384, "pa_f1": 1.0, "time": 60.7},
+      "Prophet": {"pw_f1": 0.729, "pa_f1": 0.917, "time": 1.4},
+      "SARIMA": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 0.0}
+    },
+    "E-1": {
+      "IF": {"pw_f1": 0.534, "pa_f1": 0.898, "time": 0.5},
+      "LOF": {"pw_f1": 0.67, "pa_f1": 0.838, "time": 1.3},
+      "OCSVM": {"pw_f1": 0.862, "pa_f1": 0.969, "time": 6.7},
+      "LSTM-VAE": {"pw_f1": 0.634, "pa_f1": 0.969, "time": 50.6},
+      "LSTM-LOF": {"pw_f1": 0.8063, "pa_f1": 0.8825, "time": 61.3},
+      "Prophet": {"pw_f1": 0.082, "pa_f1": 0.082, "time": 1.7},
+      "SARIMA": {"pw_f1": 0.113, "pa_f1": 0.113, "time": 0.1}
+    },
+    "E-2": {
+      "IF": {"pw_f1": 0.288, "pa_f1": 0.992, "time": 0.6},
+      "LOF": {"pw_f1": 0.376, "pa_f1": 0.489, "time": 1.5},
+      "OCSVM": {"pw_f1": 0.63, "pa_f1": 0.815, "time": 15.7},
+      "LSTM-VAE": {"pw_f1": 0.585, "pa_f1": 0.803, "time": 58.4},
+      "LSTM-LOF": {"pw_f1": 0.4543, "pa_f1": 0.9383, "time": 61.0},
+      "Prophet": {"pw_f1": 0.274, "pa_f1": 0.274, "time": 2.1},
+      "SARIMA": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 0.0}
+    },
+    "F-1": {
+      "IF": {"pw_f1": 0.0116, "pa_f1": 0.7399, "time": 0.7},
+      "LOF": {"pw_f1": 0.706, "pa_f1": 0.874, "time": 2.4},
+      "OCSVM": {"pw_f1": 0.706, "pa_f1": 0.874, "time": 4.0},
+      "LSTM-VAE": {"pw_f1": 0.06, "pa_f1": 0.442, "time": 64.4},
+      "LSTM-LOF": {"pw_f1": 0.7065, "pa_f1": 0.8745, "time": 61.8},
+      "Prophet": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 1.7},
+      "SARIMA": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 0.0}
+    },
+    "G-1": {
+      "IF": {"pw_f1": 0.0189, "pa_f1": 0.5563, "time": 0.5},
+      "LOF": {"pw_f1": 0.24, "pa_f1": 0.903, "time": 2.1},
+      "OCSVM": {"pw_f1": 0.093, "pa_f1": 0.328, "time": 3.9},
+      "LSTM-VAE": {"pw_f1": 0.131, "pa_f1": 0.555, "time": 62.8},
+      "LSTM-LOF": {"pw_f1": 0.2721, "pa_f1": 0.9758, "time": 64.0},
+      "Prophet": {"pw_f1": 0.038, "pa_f1": 0.038, "time": 1.6},
+      "SARIMA": {"pw_f1": 0.03, "pa_f1": 0.03, "time": 0.1}
+    },
+    "D-1": {
+      "IF": {"pw_f1": 0.9085, "pa_f1": 0.9485, "time": 0.5},
+      "LOF": {"pw_f1": 0.942, "pa_f1": 0.981, "time": 1.4},
+      "OCSVM": {"pw_f1": 0.94, "pa_f1": 0.961, "time": 14.9},
+      "LSTM-VAE": {"pw_f1": 0.962, "pa_f1": 0.995, "time": 70.0},
+      "LSTM-LOF": {"pw_f1": 0.9448, "pa_f1": 0.9621, "time": 62.3},
+      "Prophet": {"pw_f1": 0.942, "pa_f1": 0.942, "time": 1.5},
+      "SARIMA": {"pw_f1": 0.574, "pa_f1": 0.574, "time": 0.2}
+    },
+    "M-5": {
+      "IF": {"pw_f1": 0.2638, "pa_f1": 0.7218, "time": 0.4},
+      "LOF": {"pw_f1": 0.704, "pa_f1": 0.915, "time": 0.6},
+      "OCSVM": {"pw_f1": 0.36, "pa_f1": 1.0, "time": 4.7},
+      "LSTM-VAE": {"pw_f1": 0.753, "pa_f1": 0.968, "time": 45.6},
+      "LSTM-LOF": {"pw_f1": 0.9008, "pa_f1": 0.9107, "time": 43.2},
+      "Prophet": {"pw_f1": 0.0, "pa_f1": 0.0, "time": 0.5},
+      "SARIMA": {"pw_f1": 0.282, "pa_f1": 0.282, "time": 0.1}
+    }
+  }
+}

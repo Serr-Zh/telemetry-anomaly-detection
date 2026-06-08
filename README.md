@@ -1,69 +1,41 @@
-# Satellite Telemetry Anomaly Detector
+# Telemetry Anomaly Detection
 
-Детекция аномалий в телеметрии космических аппаратов методами обучения без учителя. Проект реализован как прототип дипломной работы и включает 5 методов обнаружения аномалий, 2 классических базовых метода, гибридный ансамбль, а также веб-интерфейс на Flask для визуализации и сравнения результатов.
-
----
-
-## Содержание
-
-- [Постановка задачи](#постановка-задачи)
-- [Методы обнаружения аномалий](#методы-обнаружения-аномалий)
-- [Результаты](#результаты)
-- [Структура проекта](#структура-проекта)
-- [Установка и запуск](#установка-и-запуск)
-- [Веб-приложение](#веб-приложение)
-- [Запуск пайплайнов](#запуск-пайплайнов)
-- [Данные](#данные)
-- [Метрики оценки](#метрики-оценки)
-- [Литература](#литература)
+Unsupervised anomaly detection in spacecraft telemetry using IF, LOF, OCSVM, LSTM-VAE and LSTM-LOF hybrid — evaluated on NASA SMAP/MSL benchmark with Flask web dashboard.
 
 ---
 
-## Постановка задачи
+## Methods
 
-Космические аппараты передают телеметрические данные (напряжение батарей, токи солнечных панелей, температуры, давление и др.), которые необходимо анализировать для своевременного выявления аномального поведения подсистем. Задача осложняется тем, что:
+### Classical ML
 
-- Разметка аномалий скудная — обучение без учителя
-- Аномалии редки — сильный дисбаланс классов
-- Телеметрия нестационарна — сезонность, тренды, переключения режимов
-- Требуется быстрая реакция — важна не только точность, но и время обнаружения
+| Method | Description | Key settings |
+|--------|-------------|--------------|
+| **Isolation Forest (IF)** | Isolation via random splits | Per-channel threshold tuning (PW+PA scoring) |
+| **Local Outlier Factor (LOF)** | Local density vs. neighbors | Rolling window 50, k=20 |
+| **One-Class SVM (OCSVM)** | Hyperplane separating normal from anomaly | RBF kernel, nu=0.05 |
 
----
+### Deep Learning
 
-## Методы обнаружения аномалий
+| Method | Description | Architecture |
+|--------|-------------|--------------|
+| **LSTM-VAE + IF** | Variational autoencoder on LSTM, residuals analyzed by IF | Encoder 40 epochs + Decoder 60 epochs, latent=8 |
+| **LSTM-Forecast + LOF + IF** | LSTM forecaster predicts next step, forecast errors + raw residuals analyzed by LOF, IF on features, best selected | Forecaster 80 epochs, LOF on errors, IF on features |
 
-### Классические ML-методы
+### Classical Baselines
 
-| Метод | Описание | Контаминация | Особенности |
-|-------|----------|--------------|-------------|
-| **Isolation Forest (IF)** | Изоляция аномалий через случайные разбиения | Автоподбор по порогу | Per-channel threshold tuning, combined PW+PA scoring |
-| **Local Outlier Factor (LOF)** | Локальная плотность относительно соседей | 5% | Rolling window 50, k=20 |
-| **One-Class SVM (OCSVM)** | Гиперплоскость, отделяющая норму от аномалий | 5% | RBF kernel, nu=0.05 |
-
-### Глубинные методы
-
-| Метод | Описание | Архитектура |
-|-------|----------|-------------|
-| **LSTM-VAE + IF** | Вариационный автоэнкодер на LSTM для реконструкции, остатки анализируются IF | LSTM encoder (40 эпох) + LSTM decoder (60 эпох), latent=8 |
-| **LSTM-Forecast + LOF + IF** | LSTM-предиктор прогнозирует следующий шаг, ошибки прогноза + raw residuals анализируются LOF, дополнительно IF на окнах | LSTM forecaster (80 эпох), LOF на ошибках, IF на признаках, выбор лучшего |
-
-### Классические базовые методы
-
-| Метод | Описание |
-|-------|----------|
-| **Prophet** | Аддитивная модель Facebook Prophet с детекцией по доверительному интервалу |
-| **SARIMA** | Сезонная ARIMA с детекцией по остаткам |
+| Method | Description |
+|--------|-------------|
+| **Prophet** | Facebook Prophet additive model with confidence interval detection |
+| **SARIMA** | Seasonal ARIMA with residual-based detection |
 
 ---
 
-## Результаты
+## Results
 
-### NASA SMAP/MSL (8 каналов)
+### NASA SMAP/MSL (8 channels)
 
-**Point-Wise F1 (строгая оценка, точное совпадение точек):**
-
-| Метод | PW Macro F1 | PA Macro F1 | Time/ch (s) |
-|-------|-------------|-------------|-------------|
+| Method | PW Macro F1 | PA Macro F1 | Time/ch (s) |
+|--------|-------------|-------------|-------------|
 | Isolation Forest | 35.5% | 82.3% | 0.5 |
 | LOF | 65.8% | 86.6% | 1.8 |
 | OCSVM | 65.0% | 85.6% | 7.9 |
@@ -72,71 +44,73 @@
 | Prophet | 25.8% | 39.6% | 1.4 |
 | SARIMA | 14.6% | 14.6% | 0.1 |
 
-- **PA (Point-Adjust) F1** — стандартная метрика NASA SMAP/MSL (Hundman et al., KDD 2018): если хотя бы одна точка аномального сегмента обнаружена, весь сегмент считается найденным.
-- **PW (Point-Wise) F1** — строгая оценка, требует точного совпадения каждой точки.
-- LSTM-LOF + IF показывает лучший результат по обеим метрикам среди одиночных методов.
-- Классические ML-методы (LOF, OCSVM) значительно превосходят Prophet/SARIMA при малом времени работы.
+- **PA (Point-Adjust) F1** — NASA SMAP/MSL standard (Hundman et al., KDD 2018): if any point of an anomaly segment is detected, the whole segment counts as found.
+- **PW (Point-Wise) F1** — strict: exact point-level matching.
+- LSTM-LOF + IF achieves best results among single methods on both metrics.
+- Classical ML (LOF, OCSVM) significantly outperforms Prophet/SARIMA with low runtime.
 
-### Ансамбль (union/any strategy)
+### Ensemble (union/any)
 
-| Стратегия | PW Macro F1 | PA Macro F1 | Time/ch (s) |
-|-----------|-------------|-------------|-------------|
+| Strategy | PW Macro F1 | PA Macro F1 | Time/ch (s) |
+|----------|-------------|-------------|-------------|
 | Ensemble (any) | 74.6% | 96.3% | 101.2 |
 
-Объединение предсказаний всех методов (аномалия = хотя бы один метод детектировал) даёт максимальный PA-F1 = 96.3%.
+Union of all methods (anomaly = at least one method flagged) yields PA-F1 = 96.3%.
 
-### Синтетические данные
+### Synthetic Data
 
-| Метод | Macro F1 |
-|-------|----------|
+| Method | Macro F1 |
+|--------|----------|
 | LSTM-VAE + IF (Deep) | 74.9% |
 | LOF | 36.3% |
 | IF | 19.1% |
 
 ### Time-to-Detection
 
-| Метод | Mean TTD | Detection Rate |
-|-------|----------|----------------|
+| Method | Mean TTD | Detection Rate |
+|--------|----------|----------------|
 | LOF | 44 | 93.8% |
 | OCSVM | 47 | 93.8% |
 
 ---
 
-## Структура проекта
+## Project Structure
 
 ```
 telemetry-anomaly-detection/
-├── app/                            ← Flask веб-приложение
-│   └── app.py
-├── pipelines/                      ← Пайплайны обнаружения аномалий
+├── app/                            ← Flask web application
+│   ├── app.py                      ← Main Flask app
+│   └── static/
+│       └── plotly.min.js           ← Local Plotly (no CDN required)
+├── pipelines/                      ← Anomaly detection pipelines
 │   ├── if_pipeline.py              ← Isolation Forest
 │   ├── lof_pipeline.py             ← Local Outlier Factor
 │   ├── ocsvm_pipeline.py           ← One-Class SVM
 │   ├── lstm_vae_pipeline.py        ← LSTM-VAE + IF
 │   ├── lstm_lof_pipeline.py        ← LSTM-Forecast + LOF + IF
 │   └── baselines_pipeline.py       ← Prophet / SARIMA / GARCH
-├── evaluation/                     ← Утилиты оценки и запуска
-│   ├── evaluation_utils.py         ← PA-F1, TTD, интерпретируемость
-│   ├── run_full_eval.py            ← Полная оценка + ансамбль
-│   ├── run_simulated.py            ← Оценка на синтетических данных
-│   ├── eval_ttd_interp.py          ← TTD + интерпретируемость
-│   └── generate_simulated.py       ← Генератор синтетических данных
+├── evaluation/                     ← Evaluation utilities and runners
+│   ├── evaluation_utils.py         ← PA-F1, TTD, interpretability
+│   ├── run_full_eval.py            ← Full evaluation + ensemble
+│   ├── run_simulated.py            ← Synthetic data evaluation
+│   ├── eval_ttd_interp.py          ← TTD + interpretability
+│   └── generate_simulated.py       ← Synthetic data generator
 │
-├── data/                           ← NASA SMAP/MSL данные
-│   ├── train/                      ← Обучающая выборка (норма)
-│   ├── test/                       ← Тестовая выборка (с аномалиями)
-│   ├── labeled_anomalies.csv       ← Разметка аномальных сегментов
-│   └── 2018-05-19_15.00.10/        ← Предобученные модели Hundman et al.
+├── data/                           ← NASA SMAP/MSL data
+│   ├── train/                      ← Normal telemetry (no anomalies)
+│   ├── test/                       ← Test telemetry (with anomalies)
+│   ├── labeled_anomalies.csv       ← Anomaly segment labels
+│   └── 2018-05-19_15.00.10/        ← Pre-trained models (Hundman et al.)
 │
-├── data_simulated/             ← Синтетические данные (3 сценария)
-│   ├── scenario_0_*.npy
-│   ├── scenario_1_*.npy
-│   ├── scenario_2_*.npy
+├── data_simulated/                 ← Synthetic telemetry (3 scenarios)
+│   ├── scenario_*_train.npy
+│   ├── scenario_*_test.npy
+│   ├── scenario_*_labels.npy
 │   └── scenarios.json
 │
-├── reports/                    ← Результаты оценки
-│   ├── full_evaluation.json    ← Полные результаты (PW, PA, timing, per-channel)
-│   ├── baselines_metrics.json  ← Prophet/SARIMA/GARCH
+├── reports/                        ← Evaluation results
+│   ├── full_evaluation.json        ← Full results (PW, PA, timing, per-channel)
+│   ├── baselines_metrics.json      ← Prophet/SARIMA/GARCH
 │   ├── if_metrics.json
 │   ├── lof_metrics.json
 │   ├── ocsvm_metrics.json
@@ -145,24 +119,28 @@ telemetry-anomaly-detection/
 │   ├── simulated_results.csv
 │   └── ttd_interpretability.json
 │
-└── notebooks/                  ← Jupyter notebooks по каждому методу
-    ├── IF_NASA_SMAP_MSL.ipynb
-    ├── LOF_NASA_SMAP_MSL.ipynb
-    ├── OCSVM_NASA_SMAP_MSL.ipynb
-    ├── LSTM_VAE_NASA_SMAP_MSL.ipynb
-    └── LSTM_LOF_NASA_SMAP_MSL.ipynb
+├── notebooks/                      ← Jupyter notebooks per method
+│   ├── IF_NASA_SMAP_MSL.ipynb
+│   ├── LOF_NASA_SMAP_MSL.ipynb
+│   ├── OCSVM_NASA_SMAP_MSL.ipynb
+│   ├── LSTM_VAE_NASA_SMAP_MSL.ipynb
+│   └── LSTM_LOF_NASA_SMAP_MSL.ipynb
+│
+├── requirements.txt
+├── .gitignore
+└── readme.md
 ```
 
 ---
 
-## Установка и запуск
+## Setup & Run
 
-### Требования
+### Requirements
 
 - Python 3.9+
-- CPU (GPU опционально для ускорения LSTM)
+- CPU (GPU optional for LSTM acceleration)
 
-### Установка
+### Install
 
 ```bash
 git clone https://github.com/<username>/telemetry-anomaly-detection.git
@@ -170,44 +148,46 @@ cd telemetry-anomaly-detection
 pip install -r requirements.txt
 ```
 
-### Запуск веб-приложения
+### Run Web App
 
 ```bash
 python -m app.app
 ```
 
-Откроется браузер: `http://localhost:5000`
+Opens browser at `http://localhost:5000`. Plotly is served locally — no internet required.
 
-### Запуск полной оценки
+### Run Full Evaluation
 
 ```bash
 python -m evaluation.run_full_eval
 ```
 
-Выполняет все методы на 8 каналах NASA SMAP/MSL, сохраняет результаты в `reports/full_evaluation.json`.
+Runs all methods on 8 NASA SMAP/MSL channels, saves results to `reports/full_evaluation.json`.
 
 ---
 
-## Веб-приложение
+## Web Application
 
-Flask-приложение (`diploma_app.py`) предоставляет:
+The Flask app (`app/app.py`) provides:
 
-- **Вкладка NASA SMAP/MSL:**
-  - Выбор канала телеметрии (P-1, S-1, E-1, E-2, F-1, G-1, D-1, M-5)
-  - Визуализация телеметрии с подсветкой аномалий
-  - Per-channel таблица: PW-F1, PA-F1, Precision, Recall
-  - Сравнительная таблица всех методов: PW Macro F1, PA Macro F1, Time/ch
-  - Bar-charts: per-channel F1, macro F1
-  - Time-to-Detection таблица
+**NASA SMAP/MSL tab:**
+- Channel selection (P-1, S-1, E-1, E-2, F-1, G-1, D-1, M-5)
+- Telemetry visualization with anomaly overlay
+- Per-channel table: PW-F1, PA-F1, Precision, Recall
+- Summary table: PW Macro F1, PA Macro F1, Time/ch for all 7 methods
+- Bar charts: per-channel F1, macro F1
+- Time-to-Detection table
 
-- **Вкладка Synthetic Data:**
-  - Выбор сценария (0, 1, 2) и телеметрического параметра
-  - Real-time IF/LOF/OCSVM детекция
-  - Breakdown по типам аномалий (drift, step, spike)
+**Synthetic Data tab:**
+- Scenario selection (5%, 10%, 15% anomaly rate)
+- Parameter selection (8 telemetry parameters, charts update on switch)
+- Real-time IF/LOF/OCSVM detection with "Run Methods" button
+- Anomaly event table with type, affected parameters
+- F1 by scenario and anomaly type bar charts
 
 ---
 
-## Запуск пайплайнов
+## Run Pipelines Individually
 
 ```bash
 python -m pipelines.if_pipeline           # Isolation Forest
@@ -216,68 +196,69 @@ python -m pipelines.ocsvm_pipeline         # OCSVM
 python -m pipelines.lstm_vae_pipeline      # LSTM-VAE + IF
 python -m pipelines.lstm_lof_pipeline      # LSTM-Forecast + LOF + IF
 python -m pipelines.baselines_pipeline     # Prophet, SARIMA, GARCH
-python -m evaluation.run_simulated         # Оценка на синтетических данных
-python -m evaluation.eval_ttd_interp       # TTD + интерпретируемость
+python -m evaluation.run_simulated         # Synthetic evaluation
+python -m evaluation.eval_ttd_interp       # TTD + interpretability
+python -m evaluation.generate_simulated    # Generate synthetic data
 ```
 
-Каждый пайплайн сохраняет метрики в `reports/`.
+Each pipeline saves metrics to `reports/`.
 
 ---
 
-## Данные
+## Data
 
 ### NASA SMAP/MSL
 
-Бенчмарк от Hundman et al. (KDD 2018). Содержит телеметрию двух космических аппаратов:
+Benchmark from Hundman et al. (KDD 2018). Telemetry from two spacecraft:
 
-| Канал | Аппарат | Подсистема | Датчик |
-|-------|---------|-----------|--------|
-| P-1 | SMAP | Энергоснабжение | battery_voltage |
-| S-1 | SMAP | Солнечные панели | solar_current |
-| E-1 | SMAP | Термоконтроль (внутр.) | temperature_int |
-| E-2 | SMAP | Термоконтроль (внеш.) | temperature_ext |
-| F-1 | SMAP | Система ориентации | attitude_error |
-| G-1 | SMAP | Двигательная установка | thruster_pressure |
-| D-1 | SMAP | Обработка данных | data_rate |
-| M-5 | MSL | Вычислительная система | cpu_load |
+| Channel | Spacecraft | Subsystem | Sensor |
+|---------|-----------|-----------|--------|
+| P-1 | SMAP | Power | battery_voltage |
+| S-1 | SMAP | Solar Array | solar_current |
+| E-1 | SMAP | Thermal (internal) | temperature_int |
+| E-2 | SMAP | Thermal (external) | temperature_ext |
+| F-1 | SMAP | Attitude Control | attitude_error |
+| G-1 | SMAP | Propulsion | thruster_pressure |
+| D-1 | SMAP | Data Handling | data_rate |
+| M-5 | MSL | CPU | cpu_load |
 
-- `data/train/` — нормальная телеметрия (без аномалий)
-- `data/test/` — тестовая телеметрия (с аномалиями)
-- `data/labeled_anomalies.csv` — разметка аномальных сегментов
+- `data/train/` — normal telemetry
+- `data/test/` — telemetry with anomalies
+- `data/labeled_anomalies.csv` — anomaly segment labels
 
-### Синтетические данные
+### Synthetic Data
 
-Генерируются `generate_simulated.py`. 3 сценария с уровнем аномальности 5%, 10%, 15%. 8 телеметрических параметров. Типы аномалий:
+Generated by `evaluation/generate_simulated.py`. 3 scenarios with 5%, 10%, 15% anomaly contamination across 8 telemetry parameters. Anomaly types:
 
-| Тип | Описание |
-|-----|----------|
-| Drift | Постепенное отклонение параметра |
-| Step | Внезапный сдвиг уровня |
-| Spike | Кратковременный выброс |
+| Type | Description |
+|------|-------------|
+| Drift | Gradual parameter deviation |
+| Step | Sudden offset change |
+| Spike | Short-lived extreme value |
 
 ---
 
-## Метрики оценки
+## Evaluation Metrics
 
 ### Point-Wise F1 (PW-F1)
 
-Классический F1-score: точное совпадение «аномалия/норма» в каждой точке. Строгая оценка — штрафует за неточное определение границ аномалии.
+Classic F1-score: exact "anomaly/normal" match at each point. Strict evaluation — penalizes imprecise anomaly boundaries.
 
 ### Point-Adjust F1 (PA-F1)
 
-Метрика, принятая в NASA SMAP/MSL бенчмарке (Hundman et al., KDD 2018). Если хотя бы одна точка аномального сегмента была обнаружена, весь сегмент считается найденным верно. Более мягкая оценка, отражающая практическую значимость: оператору достаточно одного сигнала для начала расследования.
+NASA SMAP/MSL benchmark standard (Hundman et al., KDD 2018). If at least one point of an anomaly segment is detected, the entire segment counts as correctly found. Softer evaluation reflecting practical significance: a single alert is enough for an operator to start investigation.
 
 ### Time-to-Detection (TTD)
 
-Среднее количество отсчётов от начала аномального сегмента до первого обнаружения. Меньше = быстрее реакция.
+Mean number of time steps from anomaly segment start to first detection. Lower = faster reaction.
 
 ### Detection Rate
 
-Доля аномальных сегментов, в которых метод обнаружил хотя бы одну точку.
+Fraction of anomaly segments where the method detected at least one point.
 
 ---
 
-## Литература
+## References
 
 1. Hundman K., Constantinou V., Laporte C., Colwell I., Soderstrom T. **Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding** // KDD 2018. [arXiv:1802.04431](https://arxiv.org/abs/1802.04431)
 2. Liu F.T., Ting K.M., Zhou Z.H. **Isolation Forest** // ICDM 2008.

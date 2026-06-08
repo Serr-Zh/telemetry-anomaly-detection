@@ -38,7 +38,7 @@ HTML = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Satellite Anomaly Detector</title>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script src="/static/plotly.min.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; color: #1a1a2e; }
@@ -98,7 +98,7 @@ tr:hover td { background: #f0f0ff; }
       <option value="2">Scenario 2 (15% anomalies)</option>
     </select>
     <h2>Parameter</h2>
-    <select id="param">
+    <select id="param" onchange="update()">
       {% for i, p in enumerate_params %}<option value="{{i}}">{{p}}</option>{% endfor %}
     </select>
     <button id="runBtn" onclick="runSynthetic()">Run Methods</button>
@@ -370,8 +370,8 @@ def load_sim():
     return pd.DataFrame()
 
 
-def run_if_synthetic(train, test, labels):
-    tr1, te1 = train[:, 0], test[:, 0]
+def run_if_synthetic(train, test, labels, param_idx=0):
+    tr1, te1 = train[:, param_idx], test[:, param_idx]
     tr_f = build_features_1d(tr1)
     tail = tr1[-1500:]
     comb = np.concatenate([tail, te1])
@@ -394,8 +394,8 @@ def run_if_synthetic(train, test, labels):
     return best_pred
 
 
-def run_lof_synthetic(train, test, labels):
-    tr1, te1 = train[:, 0], test[:, 0]
+def run_lof_synthetic(train, test, labels, param_idx=0):
+    tr1, te1 = train[:, param_idx], test[:, param_idx]
     tr_f = build_features_1d(tr1)
     tail = tr1[-1500:]
     comb = np.concatenate([tail, te1])
@@ -422,8 +422,8 @@ def run_lof_synthetic(train, test, labels):
     return best_pred
 
 
-def run_ocsvm_synthetic(train, test, labels):
-    tr1, te1 = train[:, 0], test[:, 0]
+def run_ocsvm_synthetic(train, test, labels, param_idx=0):
+    tr1, te1 = train[:, param_idx], test[:, param_idx]
     tr_f = build_features_1d(tr1)
     tail = tr1[-1500:]
     comb = np.concatenate([tail, te1])
@@ -555,7 +555,7 @@ def make_type_barchart(sim_df):
     return {"data": data, "layout": layout}
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), "static"))
 nasa_results = load_nasa_results()
 ttd_data = load_ttd()
 sim_results = load_sim()
@@ -576,13 +576,14 @@ def index():
 def get_data():
     ch = request.args.get("channel")
     sid = request.args.get("scenario", "0")
+    pidx = request.args.get("param", "0")
     show_compare = request.args.get("compare", "true") == "true"
     show_ttd = request.args.get("ttd", "true") == "true"
 
     if ch:
         return jsonify(_nasa_data(ch, show_compare, show_ttd))
     else:
-        return jsonify(_sim_data(int(sid), show_compare, show_ttd))
+        return jsonify(_sim_data(int(sid), int(pidx), show_compare, show_ttd))
 
 
 @app.route("/run")
@@ -597,11 +598,11 @@ def run_methods():
     labels = np.load(os.path.join(SIM_DIR, f"scenario_{sid}_labels.npy"))
 
     results = {}
-    pred_if = run_if_synthetic(train, test, labels)
+    pred_if = run_if_synthetic(train, test, labels, pidx)
     results["IF"] = eval_pred(pred_if, labels)
-    pred_lof = run_lof_synthetic(train, test, labels)
+    pred_lof = run_lof_synthetic(train, test, labels, pidx)
     results["LOF"] = eval_pred(pred_lof, labels)
-    pred_ocsvm = run_ocsvm_synthetic(train, test, labels)
+    pred_ocsvm = run_ocsvm_synthetic(train, test, labels, pidx)
     results["OCSVM"] = eval_pred(pred_ocsvm, labels)
 
     if not sim_results.empty:
@@ -611,7 +612,7 @@ def run_methods():
                 rr = sub.iloc[0]
                 results[mk] = {"f1": rr["f1"], "p": rr["p"], "r": rr["r"]}
 
-    base = _sim_data(sid, show_compare, show_ttd)
+    base = _sim_data(sid, pidx, show_compare, show_ttd)
 
     headers = ["Method", "F1", "Precision", "Recall"]
     rows, best_mk = [], max(results, key=lambda k: results[k]["f1"])
@@ -706,20 +707,24 @@ def _nasa_data(ch, show_compare, show_ttd):
     return out
 
 
-def _sim_data(sid, show_compare, show_ttd):
+def _sim_data(sid, pidx, show_compare, show_ttd):
     out = {}
     train = np.load(os.path.join(SIM_DIR, f"scenario_{sid}_train.npy"))
     test = np.load(os.path.join(SIM_DIR, f"scenario_{sid}_test.npy"))
     labels = np.load(os.path.join(SIM_DIR, f"scenario_{sid}_labels.npy"))
+
+    pidx = max(0, min(int(pidx), test.shape[1] - 1))
+
     with open(os.path.join(SIM_DIR, "scenarios.json")) as f:
         scenarios = json.load(f)
     info = scenarios[sid]
     anom_pct = labels.sum() / len(labels) * 100
 
-    out["info"] = {"Scenario": str(sid), "Train": f"{train.shape[0]:,}",
-                   "Test": f"{test.shape[0]:,}", "Anomaly %": f"{anom_pct:.1f}%",
+    out["info"] = {"Scenario": str(sid), "Parameter": SIM_PARAMS[pidx],
+                   "Train": f"{train.shape[0]:,}", "Test": f"{test.shape[0]:,}",
+                   "Anomaly %": f"{anom_pct:.1f}%",
                    "Events": str(len(info.get("anomalies", [])))}
-    out["telemetry_plot"] = make_telemetry_plot(test[:, 0], labels)
+    out["telemetry_plot"] = make_telemetry_plot(test[:, pidx], labels)
 
     if info.get("anomalies"):
         headers = ["Type", "Start", "End", "Length", "Affected Params"]
